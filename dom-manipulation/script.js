@@ -6,11 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const addQuoteBtn = document.getElementById('addQuote');
     const importFile = document.getElementById('importFile');
     const exportJson = document.getElementById('exportJson')
+    const categoryFilter = document.getElementById('categoryFilter')
+    const filteredQuotes = document.getElementById('filteredQuotes')
 
 
 
-    let quotes = JSON.parse(localStorage.getItem('quotes')) || []
-    console.log(quotes);
+
+    // let quotes = JSON.parse(localStorage.getItem('quotes')) || []
+    // console.log(quotes);
+
+    // populateCategories()
+    getQuotes()
 
 
     // const quotes = [
@@ -64,6 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveQuotes() {
         localStorage.setItem('quotes', JSON.stringify(quotes))
+        getQuotes()
+    }
+
+    function getQuotes() {
+        quotes = JSON.parse(localStorage.getItem('quotes')) || []
+        populateCategories()
     }
 
     function exportToJsonFile() {
@@ -80,6 +92,45 @@ document.addEventListener('DOMContentLoaded', () => {
         URL.revokeObjectURL(url);
     }
 
+    function populateCategories() {
+        if (!quotes.length > 0) {
+            const paragraph = document.createElement('p')
+            paragraph.innerText = "No category available"
+            categoryFilter.appendChild(paragraph)
+            return;
+        }
+
+        const categories = quotes.map(quote => quote.category.toLowerCase())
+        console.log(categories);
+        const removeDuplicates = new Set(categories)
+        removeDuplicates.forEach(category => {
+            const option = document.createElement('option')
+            option.value = category
+            option.innerText = category
+            categoryFilter.appendChild(option)
+
+        });
+
+
+
+    }
+
+    function filterQuotes(event) {
+        filteredQuotes.innerHTML = `<p></p>`
+        const value = event.target.value
+        if (value === "all") {
+
+        }
+        const filterQuotes = quotes.filter(quote => quote.category.toLowerCase() === value.toLowerCase())
+        console.log('filtered quotes ', filterQuotes);
+        filterQuotes.forEach((quote) => {
+            const paragraph = document.createElement('p')
+            paragraph.innerText = quote.text
+            filteredQuotes.appendChild(paragraph)
+        })
+
+    }
+
 
 
 
@@ -88,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addQuoteBtn.addEventListener('click', createAddQuoteForm)
     importFile.addEventListener('change', importFromJsonFile)
     exportJson.addEventListener('click', exportToJsonFile)
+    categoryFilter.addEventListener('change', filterQuotes)
 
 
 
