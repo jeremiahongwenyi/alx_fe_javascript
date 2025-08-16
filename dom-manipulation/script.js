@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!filterFromLocal) {
         noFilterApplied()
     } else {
-        // filterQuotes(filterFromLocal)
+        filterQuotesReal(filterFromLocal)
     }
 
 
@@ -129,6 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function filterQuotes(event) {
         filteredQuotes.innerHTML = `<p></p>`
         const selectedCategory = event.target.value
+        filterQuotesReal(selectedCategory)
+    }
+
+    function filterQuotesReal(selectedCategory) {
         localStorage.setItem('filterValue', JSON.stringify(selectedCategory))
         let filterQuotes = []
         if (selectedCategory === "all") {
@@ -142,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
             paragraph.innerText = quote.text
             filteredQuotes.appendChild(paragraph)
         })
-
     }
 
     function noFilterApplied() {
