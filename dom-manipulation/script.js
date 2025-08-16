@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { text: "In the middle of every difficulty lies opportunity.", category: "Wisdom" }
     ];
 
-    function displayRandomQuote() {
+    function showRandomQuote() {
         if (quotes.length === 0) {
             quoteDisplay.innerHTML = "<em>No quotes yet. Add one below.</em>";
             return;
@@ -34,6 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     newQuoteBtn.addEventListener('click', displayRandomQuote);
 
     // Optionally show one on load
-    displayRandomQuote();
+    showRandomQuote();
 
 })
