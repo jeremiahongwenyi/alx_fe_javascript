@@ -18,6 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // populateCategories()
     getQuotes()
 
+    const filterFromLocal = JSON.parse(localStorage.getItem('filterValue'))
+
+    if (!filterFromLocal) {
+        noFilterApplied()
+    } else {
+        // filterQuotes(filterFromLocal)
+    }
+
+
+
 
     // const quotes = [
     //     { text: "The best way to get started is to quit talking and begin doing.", category: "Motivation" },
@@ -95,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function populateCategories() {
         if (!quotes.length > 0) {
             const paragraph = document.createElement('p')
-            paragraph.innerText = "No category available"
+            paragraph.textContent = "No category available"
             categoryFilter.appendChild(paragraph)
             return;
         }
@@ -115,13 +125,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+
     function filterQuotes(event) {
         filteredQuotes.innerHTML = `<p></p>`
         const value = event.target.value
+        localStorage.setItem('filterValue', JSON.stringify(value))
+        let filterQuotes = []
         if (value === "all") {
-
+            noFilterApplied()
+            return;
         }
-        const filterQuotes = quotes.filter(quote => quote.category.toLowerCase() === value.toLowerCase())
+        filterQuotes = quotes.filter(quote => quote.category.toLowerCase() === value.toLowerCase())
         console.log('filtered quotes ', filterQuotes);
         filterQuotes.forEach((quote) => {
             const paragraph = document.createElement('p')
@@ -129,6 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
             filteredQuotes.appendChild(paragraph)
         })
 
+    }
+
+    function noFilterApplied() {
+        let filterQuotes = quotes.filter(quote => quote.category.toLowerCase())
+        filterQuotes.forEach((quote) => {
+            const paragraph = document.createElement('p')
+            paragraph.innerText = quote.text
+            filteredQuotes.appendChild(paragraph)
+        })
     }
 
 
