@@ -128,14 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function filterQuotes(event) {
         filteredQuotes.innerHTML = `<p></p>`
-        const value = event.target.value
-        localStorage.setItem('filterValue', JSON.stringify(value))
+        const selectedCategory = event.target.value
+        localStorage.setItem('filterValue', JSON.stringify(selectedCategory))
         let filterQuotes = []
-        if (value === "all") {
+        if (selectedCategory === "all") {
             noFilterApplied()
             return;
         }
-        filterQuotes = quotes.filter(quote => quote.category.toLowerCase() === value.toLowerCase())
+        filterQuotes = quotes.filter(quote => quote.category.toLowerCase() === selectedCategory.toLowerCase())
         console.log('filtered quotes ', filterQuotes);
         filterQuotes.forEach((quote) => {
             const paragraph = document.createElement('p')
