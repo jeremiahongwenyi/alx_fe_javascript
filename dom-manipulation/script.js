@@ -12,8 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showRandomQuote() {
         if (!quotes.length > 0) {
-            // const paragraph = document.createElement('p')
-            // paragraph
             quoteDisplay.innerText = "There are no quotes yet,  add one below."
             return;
         }
@@ -34,6 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = { text: quoteText.value, category: quoteCategory.value }
         quotes.push(data)
         console.log(quotes);
+        const paragraph = document.createElement('p')
+        paragraph.innerText = quoteText.value
+        quoteDisplay.appendChild(paragraph)
+
     }
 
 
