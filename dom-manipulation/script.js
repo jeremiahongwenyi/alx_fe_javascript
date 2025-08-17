@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
             quotes = [...serverQuotes];
             saveQuotes();
 
-            console.log("Quotes synced with server:", quotes);
+            console.log("Quotes synced with server!", quotes);
             notifyUser("Quotes updated from server!");
         } catch (error) {
             console.error("Error syncing quotes:", error);
