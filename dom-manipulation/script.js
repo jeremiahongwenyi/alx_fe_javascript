@@ -56,14 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const data = { text: quoteText.value, category: quoteCategory.value }
-        quotes.push(data)
-        console.log(quotes);
-        saveQuotes()
-        const paragraph = document.createElement('p')
-        paragraph.innerText = quoteText.value
-        quoteDisplay.appendChild(paragraph)
+        quotes.push(data);
+        saveQuotes();
 
+        // NEW CODE: Sync with server
+        postQuoteToServer(data);
+
+        const paragraph = document.createElement('p');
+        paragraph.innerText = quoteText.value;
+        quoteDisplay.appendChild(paragraph);
     }
+
 
     function importFromJsonFile(event) {
         const fileReader = new FileReader();
@@ -156,6 +159,57 @@ document.addEventListener('DOMContentLoaded', () => {
             filteredQuotes.appendChild(paragraph)
         })
     }
+
+    // NEW CODE: Simulate fetching quotes from server
+    async function fetchQuotesFromServer() {
+        try {
+            const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=5');
+            const data = await response.json();
+
+            // Map JSONPlaceholder posts into our {text, category} format
+            const serverQuotes = data.map(post => ({
+                text: post.title,
+                category: "server"
+            }));
+
+            // Conflict resolution: server always wins
+            quotes = [...serverQuotes];
+            saveQuotes();
+            console.log("Quotes synced with server:", quotes);
+            notifyUser("Quotes updated from server!");
+
+        } catch (error) {
+            console.error("Error fetching quotes:", error);
+        }
+    }
+
+    // NEW CODE: Simulate posting a new quote to server
+    async function postQuoteToServer(quote) {
+        try {
+            const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(quote)
+            });
+            const data = await response.json();
+            console.log("Quote sent to server:", data);
+        } catch (error) {
+            console.error("Error posting quote:", error);
+        }
+    }
+
+    // NEW CODE: Periodic sync with server
+    setInterval(fetchQuotesFromServer, 15000);
+
+    // NEW CODE: Simple notification for user
+    function notifyUser(message) {
+        alert(message);
+    }
+
+
+
+
+
 
 
 
