@@ -60,7 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
         saveQuotes();
 
         // NEW CODE: Sync with server
-        postQuoteToServer(data);
+        postQuoteToServer(data);   // already fine
+        syncQuotes();              // NEW CODE: re-sync after posting
+
 
         const paragraph = document.createElement('p');
         paragraph.innerText = quoteText.value;
@@ -198,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
     // NEW CODE: Periodic sync with server
     setInterval(fetchQuotesFromServer, 15000);
 
@@ -205,6 +208,32 @@ document.addEventListener('DOMContentLoaded', () => {
     function notifyUser(message) {
         alert(message);
     }
+
+    // NEW CODE: Sync local data with server
+    async function syncQuotes() {
+        try {
+            const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=5');
+            const data = await response.json();
+
+            // Map posts into our format
+            const serverQuotes = data.map(post => ({
+                text: post.title,
+                category: "server"
+            }));
+
+            // Conflict resolution: server wins
+            quotes = [...serverQuotes];
+            saveQuotes();
+
+            console.log("Quotes synced with server:", quotes);
+            notifyUser("Quotes updated from server!");
+        } catch (error) {
+            console.error("Error syncing quotes:", error);
+        }
+    }
+
+    setInterval(syncQuotes, 15000);
+
 
 
 
